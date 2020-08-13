@@ -1,14 +1,14 @@
 import React from 'react';
-import SECTIONS from './../../data/directory.data'
 import './directory.styles.scss'
 import MenuItem from '../menu-item/menu-item.component';
+import SECTIONS_DATA from '../../data/sections.data'
 
 
 class Directory extends React.Component{
     constructor(){
         super();
         this.state = {
-            sections: SECTIONS 
+            sections: SECTIONS_DATA 
         }
     }
 
