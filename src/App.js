@@ -5,7 +5,7 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/Shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth } from './components/firebase/firebase.utils'
+import { auth, createUserProfileDocument } from './components/firebase/firebase.utils'
 
 const PageNotFound = () => (
   <div className="_404" style={{height: '70vh', display:'flex', flexDirection:'column', justifyContent:'center',textAlign:'center'}}>
@@ -29,8 +29,22 @@ class App extends Component {
   unsubscribeFromAuth = null
 
   componentDidMount = () =>{
-    this.unsubscribeFromAuth = auth.onAuthStateChanged( user =>{
-      this.setState({CurrentUser: user}, ()=>console.log(this.state.CurrentUser))
+    this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth =>{
+      // this.setState({CurrentUser: user}, ()=>console.log(this.state.CurrentUser))
+      if(userAuth){
+
+       const userRef = await createUserProfileDocument(userAuth)
+
+       userRef.onSnapshot(snapShot =>{
+         this.setState({
+           CurrentUser: {
+             id: snapShot.id,
+             ...snapShot.data()
+           }
+         }, ()=> console.log(this.state))
+       })
+      }
+      this.setState({CurrentUser: userAuth})
     } )
   }
 
